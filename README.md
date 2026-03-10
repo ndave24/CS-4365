@@ -1,41 +1,38 @@
 # Credit Risk Temporal Drift in Lending Club Data
 
-This project studies how credit-risk models degrade under **temporal distribution shift**.  
-Models are trained on earlier Lending Club loans and evaluated on later years to measure how predictive performance changes over time.
+This project studies how credit-risk models behave under **temporal distribution shift**.
 
-## Project Goal
+The current baseline trains a logistic regression model on earlier Lending Club loans and evaluates it on later years to measure how predictive performance changes over time.
 
-The main question is:
+## Current implemented baseline
 
-> If a credit-risk model is trained on historical loan applications, how well does it generalize to future borrowers as the temporal gap increases?
+The current codebase supports:
 
-For the current baseline, the project:
-- loads and cleans the curated Lending Club dataset
-- constructs strict temporal train/test splits
-- trains a baseline logistic regression model
-- evaluates performance on future years using AUC and F1
-- saves temporal performance plots and metrics
+- loading and cleaning the curated Lending Club dataset
+- selecting a structured feature set
+- constructing a temporal train/test split
+- fitting a baseline logistic regression model
+- evaluating future-year performance using AUC and F1
+- saving temporal performance plots and CSV summaries
 
-## Repository Structure
+## Repository structure
 
 ```text
 CS-4365/
 ├── README.md
+├── INSTRUCTIONS.md
+├── requirements.txt
 ├── .gitignore
 ├── data/
-│   └── .gitkeep
 ├── experiments/
 │   └── run_baseline_logreg.py
 ├── notebooks/
 │   └── exploration.ipynb
 ├── results/
-│   └── .gitkeep
 └── src/
-    ├── __init__.py
     ├── load_data.py
     ├── preprocess.py
     ├── temporal_split.py
     ├── evaluate.py
     └── models/
-        ├── __init__.py
         └── logistic.py
