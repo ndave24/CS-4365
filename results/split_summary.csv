@@ -1,0 +1,4 @@
+split,n_rows,min_year,max_year,default_rate
+train_df,453804,2007.0,2014.0,0.17024971132912006
+val_df,0,,,
+test_df,893877,2015.0,2018.0,0.21478234701194907
