@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 
@@ -13,6 +13,13 @@ class TemporalSplitConfig:
     train_end_year: int
     val_years: Optional[tuple[int, ...]] = None
     test_years: Optional[tuple[int, ...]] = None
+
+
+@dataclass(frozen=True)
+class TemporalTrainValTestSplitConfig:
+    train_end_year: int
+    val_year: int
+    test_years: Tuple[int, ...]
 
 
 def validate_temporal_split_inputs(
@@ -35,7 +42,6 @@ def validate_temporal_split_inputs(
         raise ValueError("Column 'year' contains missing values.")
 
     if not pd.api.types.is_integer_dtype(df["year"]):
-        # safe coercion if year somehow came in as float/object after earlier processing
         try:
             df["year"] = df["year"].astype(int)
         except Exception as exc:
@@ -88,6 +94,46 @@ def make_temporal_split(
 
     if len(test_df) == 0:
         raise ValueError("Temporal split produced an empty test set.")
+
+    return {
+        "train_df": train_df,
+        "val_df": val_df,
+        "test_df": test_df,
+    }
+
+
+def make_temporal_train_val_test_split(
+    df: pd.DataFrame,
+    config: TemporalTrainValTestSplitConfig,
+    schema: DatasetSchema = DatasetSchema(),
+) -> Dict[str, pd.DataFrame]:
+    """
+    Create a temporal train/validation/test split.
+
+    Example:
+    - train_end_year=2013
+    - val_year=2014
+    - test_years=(2015, 2016, 2017, 2018)
+
+    gives:
+    - train_df: years <= 2013
+    - val_df: year == 2014
+    - test_df: years in test_years
+    """
+    validate_temporal_split_inputs(df, schema=schema)
+
+    df = df.copy()
+
+    train_df = df[df["year"] <= config.train_end_year].copy()
+    val_df = df[df["year"] == config.val_year].copy()
+    test_df = df[df["year"].isin(config.test_years)].copy()
+
+    if len(train_df) == 0:
+        raise ValueError("Temporal split produced an empty train_df.")
+    if len(val_df) == 0:
+        raise ValueError("Temporal split produced an empty val_df.")
+    if len(test_df) == 0:
+        raise ValueError("Temporal split produced an empty test_df.")
 
     return {
         "train_df": train_df,
@@ -176,9 +222,7 @@ def describe_test_years(
     Summarize the test set year-by-year.
     """
     if len(test_df) == 0:
-        return pd.DataFrame(
-            columns=["year", "n_rows", "default_rate"]
-        )
+        return pd.DataFrame(columns=["year", "n_rows", "default_rate"])
 
     rows = []
     for year, year_df in get_test_subsets_by_year(test_df).items():
