@@ -23,15 +23,3 @@ Thumbs.db
 
 # Logs
 *.log
-
-# Large local datasets
-data/*.csv
-data/*.parquet
-data/*.zip
-data/*.gz
-data/*.tsv
-data/*.xlsx
-
-# Keep placeholder files
-!data/.gitkeep
-!results/.gitkeep

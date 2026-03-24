@@ -1,19 +1,16 @@
 # INSTRUCTIONS.md
 
-## Goal of this repository
+## Purpose
 
-This repository contains the current baseline implementation for a project on **temporal drift in credit-risk modeling** using the curated Lending Club dataset.
+This file explains how to reproduce the current project workflow and how the repository is organized.
 
-The current implemented goal is to:
+The canonical front-facing runner is:
 
-1. load and clean the dataset
-2. define the modeling feature set
-3. create a strict temporal split
-4. train a baseline logistic regression model
-5. evaluate future-year performance using AUC and F1
-6. save the resulting CSV summaries and plots
+```text
+reproduce_project.ipynb
+```
 
-For the current checkpoint, the intended deliverable is a **working baseline model plus an initial temporal degradation curve**.
+That notebook is the main file a user or LLM should run to reproduce the current checkpoint.
 
 ---
 
@@ -25,259 +22,182 @@ CS-4365/
 ├── INSTRUCTIONS.md
 ├── requirements.txt
 ├── .gitignore
-├── data/
-│   └── .gitkeep
-├── experiments/
-│   └── run_baseline_logreg.py
-├── notebooks/
-│   └── exploration.ipynb
+├── reproduce_project.ipynb
 ├── results/
-│   └── .gitkeep
 └── src/
     ├── __init__.py
+    ├── evaluate.py
+    ├── llm_prep.py
     ├── load_data.py
     ├── preprocess.py
     ├── temporal_split.py
-    ├── evaluate.py
+    ├── thresholding.py
     └── models/
         ├── __init__.py
-        └── logistic.py
+        ├── logistic.py
+        ├── mlp_model.py
+        └── xgboost_model.py
 ```
 
 ---
 
 ## What each file does
 
+### `reproduce_project.ipynb`
+The single canonical notebook for reproducing the current project workflow.
+
 ### `src/load_data.py`
-Loads the raw dataset from CSV or Parquet, validates required columns, parses dates, standardizes text fields, and creates time-derived columns such as `year`.
+Loads the dataset from CSV or Parquet, validates required columns, parses dates, normalizes text fields, and creates time-derived columns such as `year`.
 
 ### `src/preprocess.py`
-Chooses which columns are used as model features and constructs the preprocessing logic for tabular models.
+Defines the structured feature set and builds preprocessing logic for the tabular models.
 
 ### `src/temporal_split.py`
-Creates the train/test split by year.
+Creates the temporal train/validation/test split used by the notebook.
 
-### `src/models/logistic.py`
-Builds and fits the baseline logistic regression pipeline.
+### `src/thresholding.py`
+Tunes classification thresholds on the validation set.
 
 ### `src/evaluate.py`
-Evaluates the fitted model year-by-year and generates temporal plots.
+Evaluates year-by-year model performance and computes AUC/F1 outputs.
 
-### `experiments/run_baseline_logreg.py`
-This is the canonical script for reproducing the checkpoint baseline result.
+### `src/models/logistic.py`
+Builds and fits the logistic regression pipeline.
 
-### `notebooks/exploration.ipynb`
-This is the interactive notebook version of the same workflow. It calls the reusable code in `src/` rather than duplicating the project logic.
+### `src/models/xgboost_model.py`
+Builds and fits the XGBoost pipeline.
+
+### `src/models/mlp_model.py`
+Builds and fits the small MLP pipeline.
+
+### `src/llm_prep.py`
+Builds and exports a prompt-ready sample for a future LLM evaluation workflow. It does not call an LLM; it only prepares the data.
 
 ---
 
-## Dataset required to run this repository
+## Exact workflow implemented by the notebook
 
-This repository does **not** include the dataset file itself.
+The notebook currently performs the following steps:
 
-To reproduce the results, you must first obtain the **curated Lending Club dataset from Zenodo record 11295916**. This is the cleaned Lending Club granting-model dataset used for the project.
+1. clone the repository and install dependencies
+2. mount Google Drive
+3. load and clean the Lending Club dataset
+4. build the structured feature set
+5. create the temporal split:
+   - train: years <= 2013
+   - validation: 2014
+   - test: 2015-2018
+6. prepare and export a future LLM evaluation sample
+7. train logistic regression, XGBoost, and MLP
+8. tune thresholds on the validation year
+9. evaluate on future years using AUC and F1
+10. save final plots and CSV summaries to `results/`
 
-The dataset should then be stored in one of these ways:
+---
 
-### Option A: Google Drive (recommended for Colab)
-Store it at a path such as:
+## Dataset required to run the notebook
 
-```text
-/content/drive/MyDrive/datasets/lending_club.parquet
-```
+This repository does not include the Lending Club dataset file itself.
 
-or
+Before running the notebook, download the curated Lending Club dataset from Zenodo record 11295916 and place it in a location accessible from your runtime.
+
+Recommended Colab location:
 
 ```text
 /content/drive/MyDrive/datasets/lending_club.csv
 ```
 
-### Option B: Local repository data folder
-Store it at:
+
+Then update `DATA_PATH` in the configuration cell of `reproduce_project.ipynb`.
+
+Parquet is preferred when available.
+
+---
+
+## Google Colab reproduction steps
+
+### 1. Open Google Colab
+Start a fresh Colab session.
+
+### 2. Open `reproduce_project.ipynb`
+Use the notebook in this repository as the main runner.
+
+### 3. Make sure the dataset is already in Google Drive
+Place the Lending Club dataset somewhere in Drive and set the notebook's `DATA_PATH` accordingly.
+
+### 4. Run the notebook from top to bottom
+The notebook handles:
+- cloning the repository
+- installing dependencies
+- mounting Google Drive
+- loading the dataset
+- building features
+- creating splits
+- training and evaluating the three models
+- exporting final outputs
+
+---
+
+## Generated outputs
+
+A successful run writes outputs to:
 
 ```text
-data/lending_club.parquet
+results/
 ```
 
-or
+The main artifacts include:
 
-```text
-data/lending_club.csv
-```
+### Final comparison artifacts
+- `temporal_metrics_all_models.csv`
+- `summary_table.csv`
+- `best_thresholds.csv`
+- `comparison_auc_by_year.png`
+- `comparison_f1_by_year.png`
+- `comparison_auc_by_time_gap.png`
+- `comparison_f1_by_time_gap.png`
 
-Parquet is preferred because it loads much faster than CSV.
+### Per-model artifacts
+- `temporal_metrics_logreg.csv`
+- `temporal_metrics_xgboost.csv`
+- `temporal_metrics_mlp.csv`
+- `logreg_validation_threshold_search.csv`
+- `xgboost_validation_threshold_search.csv`
+- `mlp_validation_threshold_search.csv`
+- per-model AUC/F1 plots
+
+### Future extension artifacts
+- `llm_eval_sample.csv`
+- `llm_eval_sample.jsonl`
 
 ---
 
-## Exact reproduction workflow in Google Colab
+## What an LLM should read first
 
-This is the intended workflow for reproducing the current project result.
+An LLM trying to understand or reproduce this repository should read files in this order:
 
-### Step 1: Open Google Colab
-
-Open a new Colab notebook, or upload `notebooks/exploration.ipynb`.
-
-### Step 2: Clone the repository
-
-Run:
-
-```python
-!git clone https://github.com/ndave24/CS-4365.git
-%cd CS-4365
-```
-
-### Step 3: Install dependencies
-
-Run:
-
-```python
-!pip install -r requirements.txt
-```
-
-### Step 4: Mount Google Drive
-
-Run:
-
-```python
-from google.colab import drive
-drive.mount("/content/drive")
-```
-
-### Step 5: Make sure the dataset is already in Google Drive
-
-Before running the experiment, the user must have already uploaded the curated Lending Club dataset to Google Drive.
-
-Recommended location:
-
-```text
-/content/drive/MyDrive/datasets/lending_club.parquet
-```
-
-If only a CSV is available, it can also be used directly.
-
-### Step 6: Open the notebook
-
-Open:
-
-```text
-notebooks/exploration.ipynb
-```
-
-Inside the notebook, set:
-
-```python
-USE_GOOGLE_DRIVE = True
-```
-
-and set the dataset path to something like:
-
-```python
-DATA_PATH = Path("/content/drive/MyDrive/datasets/lending_club.parquet")
-```
-
-If needed, also set the repo root manually:
-
-```python
-REPO_ROOT = Path("/content/CS-4365")
-```
-
-Then run the notebook cells from top to bottom.
-
-### Step 7: Generated outputs
-
-A successful run should generate outputs in `results/`, including:
-
-- `temporal_metrics.csv`
-- `split_summary.csv`
-- `test_year_summary.csv`
-- `temporal_auc_f1.png`
-- `temporal_auc_f1_time_gap.png`
-
-These are the main artifacts used to document the current checkpoint result.
+1. `README.md`
+2. `INSTRUCTIONS.md`
+3. `reproduce_project.ipynb`
+4. `src/load_data.py`
+5. `src/preprocess.py`
+6. `src/temporal_split.py`
+7. `src/thresholding.py`
+8. `src/models/logistic.py`
+9. `src/models/xgboost_model.py`
+10. `src/models/mlp_model.py`
+11. `src/evaluate.py`
+12. `src/llm_prep.py`
 
 ---
 
-## Exact command-line reproduction workflow
+## Current intended scope
 
-From the repository root, after the dataset has been placed locally in `data/`, run:
+The current implemented checkpoint includes:
+- three structured-feature models
+- a temporal train/validation/test workflow
+- threshold tuning on validation
+- future-year evaluation on 2015-2018
+- export of a prompt-ready LLM evaluation sample
 
-```bash
-python experiments/run_baseline_logreg.py --data-path data/lending_club.parquet --train-end-year 2014 --test-years 2015 2016 2017 2018
-```
-
-If using CSV instead:
-
-```bash
-python experiments/run_baseline_logreg.py --data-path data/lending_club.csv --train-end-year 2014 --test-years 2015 2016 2017 2018
-```
-
-This script should load the dataset, construct the temporal split, fit the logistic regression baseline, evaluate each test year, and write the output files to `results/`.
-
----
-
-## Exact dataset loading step
-
-### In the notebook
-
-The notebook should contain a cell like:
-
-```python
-from pathlib import Path
-
-USE_GOOGLE_DRIVE = True
-REPO_ROOT = Path("/content/CS-4365")
-DATA_PATH = Path("/content/drive/MyDrive/datasets/lending_club.parquet")
-```
-
-Then later:
-
-```python
-df = load_and_clean_dataset(DATA_PATH)
-```
-
-### In the script
-
-The experiment script receives the dataset path as an argument:
-
-```bash
-python experiments/run_baseline_logreg.py --data-path data/lending_club.parquet --train-end-year 2014 --test-years 2015 2016 2017 2018
-```
-
-Internally, it calls the loading function from `src/load_data.py`.
-
----
-
-## What an LLM should do first when reading this repository
-
-An LLM trying to understand or reproduce the repository should follow this order:
-
-1. read `README.md` for a short overview
-2. read `INSTRUCTIONS.md` for the exact execution workflow
-3. inspect `experiments/run_baseline_logreg.py` to see the canonical end-to-end pipeline
-4. inspect the reusable implementation files in `src/` in this order:
-   - `load_data.py`
-   - `preprocess.py`
-   - `temporal_split.py`
-   - `models/logistic.py`
-   - `evaluate.py`
-
-The current main execution paths are:
-
-- interactive path: `notebooks/exploration.ipynb`
-- canonical reproducible path: `experiments/run_baseline_logreg.py`
-
----
-
-## Expected current scope
-
-At the moment, the implemented baseline is **structured-feature logistic regression only**.
-
-The codebase is intentionally organized so that future extensions can add:
-
-- XGBoost
-- MLP
-- calibration metrics
-- drift metrics such as PSI
-- text embedding experiments using `title` and `desc`
-
-Those future additions should reuse the same dataset loading, preprocessing, splitting, and evaluation structure already implemented here.
+Future checkpoints can extend the same pipeline with calibration metrics, drift metrics, and LLM-based evaluation.
