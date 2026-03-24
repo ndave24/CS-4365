@@ -1,254 +1,112 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Iterable, List, Optional, Sequence
-import json
+from typing import Dict, Optional, Tuple
 
+import numpy as np
 import pandas as pd
-
-from src.load_data import DatasetSchema
-
-
-@dataclass(frozen=True)
-class LLMPrepConfig:
-    """
-    Configuration for preparing future LLM-based evaluation data.
-    """
-
-    text_cols: Sequence[str] = ("title_clean", "desc_clean")
-    structured_context_cols: Sequence[str] = (
-        "loan_amnt",
-        "term",
-        "int_rate",
-        "annual_inc",
-        "dti",
-        "fico_range_low",
-        "fico_range_high",
-        "purpose",
-        "home_ownership",
-        "emp_length",
-    )
-    id_col: str = "id"
-    year_col: str = "year"
-    max_text_chars_per_field: int = 600
-    include_structured_context: bool = True
-    include_target: bool = True
+from sklearn.metrics import f1_score
 
 
-def _existing_cols(df: pd.DataFrame, cols: Sequence[str]) -> List[str]:
-    """
-    Return only the columns from cols that actually exist in df.
-    """
-    return [col for col in cols if col in df.columns]
-
-
-def _clean_text(value) -> str:
-    """
-    Convert a value to a stripped string, returning an empty string for missing values.
-    """
-    if pd.isna(value):
-        return ""
-    return str(value).strip()
-
-
-def _truncate_text(text: str, max_chars: int) -> str:
-    """
-    Truncate text to max_chars with an ellipsis if needed.
-    """
-    if len(text) <= max_chars:
-        return text
-    return text[: max_chars - 3].rstrip() + "..."
-
-
-def build_text_block(
-    row: pd.Series,
-    text_cols: Sequence[str],
-    max_text_chars_per_field: int,
-) -> str:
-    """
-    Build a multi-line text block from available text columns in a row.
-    """
-    parts: List[str] = []
-
-    for col in text_cols:
-        value = _clean_text(row.get(col, ""))
-        if value:
-            value = _truncate_text(value, max_text_chars_per_field)
-            parts.append(f"{col}: {value}")
-
-    return "\n".join(parts).strip()
-
-
-def build_structured_context_block(
-    row: pd.Series,
-    structured_cols: Sequence[str],
-) -> str:
-    """
-    Build a multi-line structured context block from selected structured columns.
-    """
-    parts: List[str] = []
-
-    for col in structured_cols:
-        value = row.get(col, None)
-        if pd.isna(value):
-            continue
-        parts.append(f"{col}: {value}")
-
-    return "\n".join(parts).strip()
-
-
-def make_default_risk_prompt(row: pd.Series) -> str:
-    """
-    Build a future-facing prompt for an LLM-based default-risk estimate.
-    This function only prepares the prompt; it does not call an LLM.
-    """
-    structured_context = row.get("structured_context", "")
-    text_block = row.get("text_block", "")
-
-    prompt = f"""You are evaluating the risk that a consumer loan will default.
-
-Use the borrower-provided text and optional structured loan context below.
-Estimate the probability of default as a number between 0 and 1.
-Then briefly explain the reasoning using only the provided information.
-
-Structured context:
-{structured_context if structured_context else "(none provided)"}
-
-Borrower text:
-{text_block if text_block else "(no text provided)"}
-
-Respond in JSON with keys:
-- default_probability
-- rationale
-"""
-    return prompt.strip()
-
-
-def build_llm_eval_dataframe(
+def predict_positive_probability(
+    model,
     df: pd.DataFrame,
-    config: LLMPrepConfig = LLMPrepConfig(),
-    schema: DatasetSchema = DatasetSchema(),
-    years: Optional[Iterable[int]] = None,
-    sample_per_year: Optional[int] = None,
-    random_state: int = 42,
-) -> pd.DataFrame:
+    feature_groups: Dict,
+) -> np.ndarray:
     """
-    Build a clean dataframe for future LLM-based evaluation.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Input dataframe.
-    config : LLMPrepConfig
-        Configuration for text/context preparation.
-    schema : DatasetSchema
-        Dataset schema used to locate the target column.
-    years : Optional[Iterable[int]]
-        If provided, filter rows to these years.
-    sample_per_year : Optional[int]
-        If provided, sample up to this many rows per year.
-    random_state : int
-        Random seed for reproducible sampling.
-
-    Returns
-    -------
-    pd.DataFrame
-        A dataframe containing prompt-ready fields for future LLM evaluation.
+    Predict positive-class probabilities for any fitted model/pipeline
+    that implements predict_proba(X).
     """
-    work_df = df.copy()
+    if "feature_cols" not in feature_groups:
+        raise ValueError("feature_groups must contain a 'feature_cols' key.")
 
-    if years is not None:
-        years = list(years)
-        if config.year_col not in work_df.columns:
-            raise ValueError(f"'{config.year_col}' column not found in dataframe.")
-        work_df = work_df[work_df[config.year_col].isin(years)].copy()
+    X = df[feature_groups["feature_cols"]].copy()
+    probs = np.asarray(model.predict_proba(X))
 
-    if sample_per_year is not None:
-        if config.year_col not in work_df.columns:
-            raise ValueError(f"'{config.year_col}' column not found in dataframe.")
-
-        sampled_parts = []
-        for _, year_df in work_df.groupby(config.year_col):
-            n = min(sample_per_year, len(year_df))
-            sampled_parts.append(year_df.sample(n=n, random_state=random_state))
-        work_df = pd.concat(sampled_parts, ignore_index=True)
-
-    text_cols = _existing_cols(work_df, config.text_cols)
-    structured_cols = _existing_cols(work_df, config.structured_context_cols)
-
-    if len(text_cols) == 0:
+    if probs.ndim != 2 or probs.shape[1] < 2:
         raise ValueError(
-            "No configured text columns were found in the dataframe. "
-            f"Configured text_cols={list(config.text_cols)}"
+            "model.predict_proba(X) must return shape (n_samples, 2+) "
+            "for binary classification."
         )
 
-    work_df = work_df.copy()
+    return probs[:, 1]
 
-    work_df["text_block"] = work_df.apply(
-        lambda row: build_text_block(
-            row=row,
-            text_cols=text_cols,
-            max_text_chars_per_field=config.max_text_chars_per_field,
-        ),
-        axis=1,
+
+def make_threshold_grid(
+    y_prob: np.ndarray,
+    min_threshold: float = 0.001,
+    max_threshold: float = 0.50,
+    n_fixed: int = 250,
+    n_quantiles: int = 250,
+) -> np.ndarray:
+    """
+    Build a threshold grid using both a fixed grid and probability quantiles.
+    """
+    fixed_grid = np.linspace(min_threshold, max_threshold, n_fixed)
+    quantile_grid = np.quantile(y_prob, np.linspace(0.0, 1.0, n_quantiles))
+
+    thresholds = np.unique(
+        np.clip(np.concatenate([fixed_grid, quantile_grid]), 1e-6, 1 - 1e-6)
+    )
+    return thresholds
+
+
+def search_best_f1_threshold(
+    y_true,
+    y_prob: np.ndarray,
+    thresholds: Optional[np.ndarray] = None,
+) -> Tuple[Dict[str, float], pd.DataFrame]:
+    """
+    Search thresholds and return the best one by F1 score.
+    """
+    y_true = pd.Series(y_true).astype(int).to_numpy()
+
+    if thresholds is None:
+        thresholds = make_threshold_grid(y_prob)
+
+    rows = []
+    for threshold in thresholds:
+        y_pred = (y_prob >= threshold).astype(int)
+
+        rows.append(
+            {
+                "threshold": float(threshold),
+                "f1": float(f1_score(y_true, y_pred, zero_division=0)),
+                "pred_positive_rate": float(y_pred.mean()),
+                "pred_positives": int(y_pred.sum()),
+            }
+        )
+
+    threshold_df = (
+        pd.DataFrame(rows)
+        .sort_values(["f1", "threshold"], ascending=[False, True])
+        .reset_index(drop=True)
     )
 
-    if config.include_structured_context:
-        work_df["structured_context"] = work_df.apply(
-            lambda row: build_structured_context_block(
-                row=row,
-                structured_cols=structured_cols,
-            ),
-            axis=1,
-        )
-    else:
-        work_df["structured_context"] = ""
-
-    work_df["llm_prompt"] = work_df.apply(make_default_risk_prompt, axis=1)
-
-    output_cols: List[str] = []
-
-    if config.id_col in work_df.columns:
-        output_cols.append(config.id_col)
-
-    if config.year_col in work_df.columns:
-        output_cols.append(config.year_col)
-
-    output_cols.extend(["text_block", "structured_context", "llm_prompt"])
-
-    if config.include_target and schema.target_col in work_df.columns:
-        output_cols.append(schema.target_col)
-
-    return work_df[output_cols].reset_index(drop=True)
+    best_row = threshold_df.iloc[0].to_dict()
+    return best_row, threshold_df
 
 
-def export_llm_eval_csv(
-    llm_df: pd.DataFrame,
-    output_path: str | Path,
-) -> Path:
+def tune_threshold_on_validation(
+    model,
+    val_df: pd.DataFrame,
+    feature_groups: Dict,
+    target_col: str = "Default",
+) -> Tuple[Dict[str, float], pd.DataFrame]:
     """
-    Save the LLM evaluation dataframe as a CSV file.
+    Tune a classification threshold on a validation dataframe.
     """
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    llm_df.to_csv(output_path, index=False)
-    return output_path
+    if target_col not in val_df.columns:
+        raise ValueError(f"Target column '{target_col}' not found in val_df.")
 
+    y_true = val_df[target_col].copy().astype(int)
+    y_prob = predict_positive_probability(
+        model=model,
+        df=val_df,
+        feature_groups=feature_groups,
+    )
 
-def export_llm_eval_jsonl(
-    llm_df: pd.DataFrame,
-    output_path: str | Path,
-) -> Path:
-    """
-    Save the LLM evaluation dataframe as a JSONL file.
-    """
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with output_path.open("w", encoding="utf-8") as f:
-        for _, row in llm_df.iterrows():
-            record = row.to_dict()
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
-
-    return output_path
+    best_row, threshold_df = search_best_f1_threshold(
+        y_true=y_true,
+        y_prob=y_prob,
+    )
+    return best_row, threshold_df
