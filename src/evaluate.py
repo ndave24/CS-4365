@@ -9,7 +9,6 @@ import pandas as pd
 from sklearn.metrics import f1_score, roc_auc_score
 
 from src.load_data import DatasetSchema
-from src.models.logistic import predict_default_label, predict_default_probability
 from src.temporal_split import get_test_subsets_by_year
 
 
@@ -24,6 +23,41 @@ def safe_roc_auc_score(y_true: pd.Series, y_prob: np.ndarray) -> float:
         return np.nan
 
     return float(roc_auc_score(y_true, y_prob))
+
+def _validate_feature_groups_for_eval(feature_groups: Dict) -> None:
+    """
+    Validate that feature_groups contains the keys needed for evaluation.
+    """
+    if "feature_cols" not in feature_groups:
+        raise ValueError("feature_groups must contain a 'feature_cols' key.")
+
+    if len(feature_groups["feature_cols"]) == 0:
+        raise ValueError("feature_groups['feature_cols'] is empty.")
+
+def predict_positive_probability(
+    model,
+    df: pd.DataFrame,
+    feature_groups: Dict,
+) -> np.ndarray:
+    """
+    Predict positive-class probabilities for any fitted model/pipeline
+    that implements predict_proba(X).
+    """
+    _validate_feature_groups_for_eval(feature_groups)
+
+    if not hasattr(model, "predict_proba"):
+        raise ValueError("Model must implement predict_proba(X).")
+
+    X = df[feature_groups["feature_cols"]].copy()
+    probs = np.asarray(model.predict_proba(X))
+
+    if probs.ndim != 2 or probs.shape[1] < 2:
+        raise ValueError(
+            "model.predict_proba(X) must return shape (n_samples, 2+) "
+            "for binary classification."
+        )
+
+    return probs[:, 1]
 
 
 def compute_binary_metrics(
@@ -64,18 +98,13 @@ def evaluate_dataframe(
     if len(df) == 0:
         raise ValueError("Cannot evaluate on an empty dataframe.")
 
-    y_true = df[schema.target_col].copy()
-    y_prob = predict_default_probability(
+    y_true = df[schema.target_col].copy().astype(int)
+    y_prob = predict_positive_probability(
         model=model,
         df=df,
         feature_groups=feature_groups,
     )
-    y_pred = predict_default_label(
-        model=model,
-        df=df,
-        feature_groups=feature_groups,
-        threshold=threshold,
-    )
+    y_pred = (y_prob >= threshold).astype(int)
 
     metrics = compute_binary_metrics(
         y_true=y_true,
@@ -165,7 +194,7 @@ def plot_temporal_metrics(
     results_df: pd.DataFrame,
     output_path: Optional[str | Path] = None,
     use_time_gap: bool = False,
-    title: str = "Temporal Performance of Logistic Regression",
+    title: str = "Temporal Performance",
 ) -> None:
     """
     Plot AUC and F1 against year or time gap.
