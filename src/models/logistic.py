@@ -18,7 +18,7 @@ class LogisticConfig:
     C: float = 1.0
     penalty: str = "l2"
     solver: str = "lbfgs"
-    class_weight: Optional[str | dict] = "balanced"
+    class_weight: Optional[str | dict] = None
     random_state: int = 42
 
 
