@@ -26,6 +26,7 @@ CS-4365/
 ├── results/
 └── src/
     ├── __init__.py
+    ├── calibration.py
     ├── evaluate.py
     ├── llm_prep.py
     ├── load_data.py
@@ -61,6 +62,9 @@ Tunes classification thresholds on the validation set.
 ### `src/evaluate.py`
 Evaluates year-by-year model performance and computes AUC/F1 outputs.
 
+### `src/calibration.py`
+Computes year-by-year calibration outputs including Brier score, ECE, reliability tables, reliability diagrams, and calibration trend plots.
+
 ### `src/models/logistic.py`
 Builds and fits the logistic regression pipeline.
 
@@ -78,7 +82,6 @@ Builds and exports a prompt-ready sample for a future LLM evaluation workflow. I
 ## Exact workflow implemented by the notebook
 
 The notebook currently performs the following steps:
-
 1. clone the repository and install dependencies
 2. mount Google Drive
 3. load and clean the Lending Club dataset
@@ -91,15 +94,16 @@ The notebook currently performs the following steps:
 7. train logistic regression, XGBoost, and MLP
 8. tune thresholds on the validation year
 9. evaluate on future years using AUC and F1
-10. save final plots and CSV summaries to `results/`
+10. evaluate on future years using ECE and Brier score
+11. generate reliability diagrams
+12. compare calibration drift against accuracy drift
+13. save final plots and CSV summaries to `results/`
 
 ---
 
 ## Dataset required to run the notebook
 
-This repository does not include the Lending Club dataset file itself.
-
-Before running the notebook, download the curated Lending Club dataset from Zenodo record 11295916 and place it in a location accessible from your runtime.
+This repository does not include the Lending Club dataset file itself. Before running the notebook, download the curated Lending Club dataset from Zenodo record 11295916 and place it in a location accessible from your runtime.
 
 Recommended Colab location:
 
@@ -107,10 +111,7 @@ Recommended Colab location:
 /content/drive/MyDrive/datasets/lending_club.csv
 ```
 
-
-Then update `DATA_PATH` in the configuration cell of `reproduce_project.ipynb`.
-
-Parquet is preferred when available.
+Then update `DATA_PATH` in the configuration cell of `reproduce_project.ipynb`. Parquet is preferred when available.
 
 ---
 
@@ -150,21 +151,39 @@ The main artifacts include:
 
 ### Final comparison artifacts
 - `temporal_metrics_all_models.csv`
+- `temporal_calibration_all_models.csv`
+- `performance_calibration_comparison.csv`
+- `reliability_bins_all_models.csv`
+- `drift_comparison_table.csv`
 - `summary_table.csv`
 - `best_thresholds.csv`
 - `comparison_auc_by_year.png`
 - `comparison_f1_by_year.png`
 - `comparison_auc_by_time_gap.png`
 - `comparison_f1_by_time_gap.png`
+- `comparison_ece_by_year.png`
+- `comparison_brier_by_year.png`
+- `comparison_ece_by_time_gap.png`
+- `comparison_brier_by_time_gap.png`
 
 ### Per-model artifacts
 - `temporal_metrics_logreg.csv`
 - `temporal_metrics_xgboost.csv`
 - `temporal_metrics_mlp.csv`
+- `temporal_calibration_logreg.csv`
+- `temporal_calibration_xgboost.csv`
+- `temporal_calibration_mlp.csv`
+- `reliability_bins_logreg.csv`
+- `reliability_bins_xgboost.csv`
+- `reliability_bins_mlp.csv`
 - `logreg_validation_threshold_search.csv`
 - `xgboost_validation_threshold_search.csv`
 - `mlp_validation_threshold_search.csv`
 - per-model AUC/F1 plots
+- per-model reliability diagrams
+- per-model ECE plots
+- per-model Brier score plots
+- per-model accuracy-vs-calibration drift plots
 
 ### Future extension artifacts
 - `llm_eval_sample.csv`
@@ -175,7 +194,6 @@ The main artifacts include:
 ## What an LLM should read first
 
 An LLM trying to understand or reproduce this repository should read files in this order:
-
 1. `README.md`
 2. `INSTRUCTIONS.md`
 3. `reproduce_project.ipynb`
@@ -183,11 +201,12 @@ An LLM trying to understand or reproduce this repository should read files in th
 5. `src/preprocess.py`
 6. `src/temporal_split.py`
 7. `src/thresholding.py`
-8. `src/models/logistic.py`
-9. `src/models/xgboost_model.py`
-10. `src/models/mlp_model.py`
-11. `src/evaluate.py`
-12. `src/llm_prep.py`
+8. `src/evaluate.py`
+9. `src/calibration.py`
+10. `src/models/logistic.py`
+11. `src/models/xgboost_model.py`
+12. `src/models/mlp_model.py`
+13. `src/llm_prep.py`
 
 ---
 
@@ -197,7 +216,10 @@ The current implemented checkpoint includes:
 - three structured-feature models
 - a temporal train/validation/test workflow
 - threshold tuning on validation
-- future-year evaluation on 2015-2018
+- future-year evaluation on 2015-2018 using AUC and F1
+- future-year calibration evaluation using ECE and Brier score
+- reliability diagrams
+- calibration-vs-accuracy drift comparison
 - export of a prompt-ready LLM evaluation sample
 
-Future checkpoints can extend the same pipeline with calibration metrics, drift metrics, and LLM-based evaluation.
+Future checkpoints can extend the same pipeline with drift metrics beyond calibration and LLM-based evaluation.
