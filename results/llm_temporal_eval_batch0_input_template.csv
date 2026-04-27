@@ -1,0 +1,951 @@
+llm_row_id,split,id,year,text_block,structured_context,llm_prompt,Default,llm_batch
+0,validation,14489082,2014,title: Debt consolidation,"loan_amnt: 7200
+purpose: debt_consolidation
+emp_length: 8 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 7200
+purpose: debt_consolidation
+emp_length: 8 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+1,validation,12495903,2014,title: Credit card refinancing,"loan_amnt: 8000
+purpose: credit_card
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 8000
+purpose: credit_card
+emp_length: 10+ years
+
+Borrower text:
+title: Credit card refinancing
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+2,validation,35863416,2014,title: Major purchase,"loan_amnt: 7200
+purpose: major_purchase
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 7200
+purpose: major_purchase
+emp_length: 10+ years
+
+Borrower text:
+title: Major purchase
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+3,validation,35054622,2014,title: Credit card refinancing,"loan_amnt: 6000
+purpose: credit_card
+emp_length: NI","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 6000
+purpose: credit_card
+emp_length: NI
+
+Borrower text:
+title: Credit card refinancing
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+4,validation,26879651,2014,title: Debt consolidation,"loan_amnt: 20000
+purpose: debt_consolidation
+emp_length: 7 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 20000
+purpose: debt_consolidation
+emp_length: 7 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+5,validation,13817333,2014,title: Major purchase,"loan_amnt: 35000
+purpose: major_purchase
+emp_length: 1 year","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 35000
+purpose: major_purchase
+emp_length: 1 year
+
+Borrower text:
+title: Major purchase
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+6,validation,19786597,2014,title: Car financing,"loan_amnt: 14000
+purpose: car
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 14000
+purpose: car
+emp_length: 10+ years
+
+Borrower text:
+title: Car financing
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+7,validation,34332444,2014,title: Debt consolidation,"loan_amnt: 16800
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 16800
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+8,validation,11694742,2014,title: Debt consolidation,"loan_amnt: 16250
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 16250
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+9,validation,28252404,2014,title: Debt consolidation,"loan_amnt: 5000
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 5000
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+10,test,95009686,2016,title: Debt consolidation,"loan_amnt: 26875
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 26875
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+11,test,88694891,2016,title: Debt consolidation,"loan_amnt: 17600
+purpose: debt_consolidation
+emp_length: 4 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 17600
+purpose: debt_consolidation
+emp_length: 4 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+12,test,88524597,2016,title: Home improvement,"loan_amnt: 16550
+purpose: home_improvement
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 16550
+purpose: home_improvement
+emp_length: 10+ years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+13,test,96469443,2017,title: Debt consolidation,"loan_amnt: 20000
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 20000
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+14,test,63783577,2015,title: Home improvement,"loan_amnt: 18000
+purpose: home_improvement
+emp_length: 7 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 18000
+purpose: home_improvement
+emp_length: 7 years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+15,test,77468300,2016,title: Debt consolidation,"loan_amnt: 1000
+purpose: debt_consolidation
+emp_length: 3 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 1000
+purpose: debt_consolidation
+emp_length: 3 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+16,test,127796530,2018,title: Other,"loan_amnt: 1000
+purpose: other
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 1000
+purpose: other
+emp_length: 10+ years
+
+Borrower text:
+title: Other
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+17,test,116271299,2017,title: Debt consolidation,"loan_amnt: 20000
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 20000
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+18,test,132767088,2018,title: Debt consolidation,"loan_amnt: 15000
+purpose: debt_consolidation
+emp_length: 5 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 15000
+purpose: debt_consolidation
+emp_length: 5 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+19,test,46825205,2015,title: Debt consolidation,"loan_amnt: 15000
+purpose: debt_consolidation
+emp_length: 5 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 15000
+purpose: debt_consolidation
+emp_length: 5 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+20,test,111540255,2017,title: Home improvement,"loan_amnt: 20000
+purpose: home_improvement
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 20000
+purpose: home_improvement
+emp_length: 10+ years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+21,test,65443118,2015,title: Debt consolidation,"loan_amnt: 21125
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 21125
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+22,test,74692844,2016,title: Debt consolidation,"loan_amnt: 35000
+purpose: debt_consolidation
+emp_length: < 1 year","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 35000
+purpose: debt_consolidation
+emp_length: < 1 year
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+23,test,128350811,2018,title: Debt consolidation,"loan_amnt: 22000
+purpose: debt_consolidation
+emp_length: NI","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 22000
+purpose: debt_consolidation
+emp_length: NI
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+24,test,137373561,2018,title: Debt consolidation,"loan_amnt: 5000
+purpose: debt_consolidation
+emp_length: 3 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 5000
+purpose: debt_consolidation
+emp_length: 3 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+25,test,57004842,2015,title: Debt consolidation,"loan_amnt: 24000
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 24000
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+26,test,88012688,2016,title: Credit card refinancing,"loan_amnt: 12000
+purpose: credit_card
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 12000
+purpose: credit_card
+emp_length: 10+ years
+
+Borrower text:
+title: Credit card refinancing
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+27,test,96716204,2017,title: Major purchase,"loan_amnt: 2200
+purpose: major_purchase
+emp_length: NI","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 2200
+purpose: major_purchase
+emp_length: NI
+
+Borrower text:
+title: Major purchase
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+28,test,53161464,2015,title: Debt consolidation,"loan_amnt: 14000
+purpose: debt_consolidation
+emp_length: 7 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 14000
+purpose: debt_consolidation
+emp_length: 7 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+29,test,131845587,2018,title: Debt consolidation,"loan_amnt: 9600
+purpose: debt_consolidation
+emp_length: 5 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 9600
+purpose: debt_consolidation
+emp_length: 5 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+30,test,44956575,2015,title: Home improvement,"loan_amnt: 7000
+purpose: home_improvement
+emp_length: 1 year","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 7000
+purpose: home_improvement
+emp_length: 1 year
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+31,test,88086233,2016,title: Debt consolidation,"loan_amnt: 2400
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 2400
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+32,test,41338645,2015,title: Debt consolidation,"loan_amnt: 9000
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 9000
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+33,test,109827318,2017,title: Debt consolidation,"loan_amnt: 20800
+purpose: debt_consolidation
+emp_length: 5 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 20800
+purpose: debt_consolidation
+emp_length: 5 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+34,test,97924119,2017,title: Home improvement,"loan_amnt: 3200
+purpose: home_improvement
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 3200
+purpose: home_improvement
+emp_length: 10+ years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+35,test,38499748,2015,title: Debt consolidation,"loan_amnt: 12000
+purpose: debt_consolidation
+emp_length: 9 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 12000
+purpose: debt_consolidation
+emp_length: 9 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+36,test,129156399,2018,title: Home improvement,"loan_amnt: 9800
+purpose: home_improvement
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 9800
+purpose: home_improvement
+emp_length: 10+ years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+37,test,133967570,2018,title: Credit card refinancing,"loan_amnt: 12000
+purpose: credit_card
+emp_length: 3 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 12000
+purpose: credit_card
+emp_length: 3 years
+
+Borrower text:
+title: Credit card refinancing
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+38,test,50477264,2015,title: Debt consolidation,"loan_amnt: 18500
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 18500
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+39,test,139442217,2018,title: Debt consolidation,"loan_amnt: 7000
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 7000
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+40,test,124042839,2017,title: Medical expenses,"loan_amnt: 16000
+purpose: medical
+emp_length: 3 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 16000
+purpose: medical
+emp_length: 3 years
+
+Borrower text:
+title: Medical expenses
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+41,test,127237157,2018,title: Debt consolidation,"loan_amnt: 4400
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 4400
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+42,test,72604542,2016,title: Debt consolidation,"loan_amnt: 5000
+purpose: debt_consolidation
+emp_length: 3 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 5000
+purpose: debt_consolidation
+emp_length: 3 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+43,test,110758741,2017,title: Vacation,"loan_amnt: 1600
+purpose: vacation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 1600
+purpose: vacation
+emp_length: 10+ years
+
+Borrower text:
+title: Vacation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+44,test,75457928,2016,title: Home improvement,"loan_amnt: 1450
+purpose: home_improvement
+emp_length: 3 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 1450
+purpose: home_improvement
+emp_length: 3 years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",1,0
+45,test,107105192,2017,title: Debt consolidation,"loan_amnt: 10000
+purpose: debt_consolidation
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 10000
+purpose: debt_consolidation
+emp_length: 2 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+46,test,67615134,2015,title: Debt consolidation,"loan_amnt: 10200
+purpose: debt_consolidation
+emp_length: 6 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 10200
+purpose: debt_consolidation
+emp_length: 6 years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+47,test,93645677,2016,title: Debt consolidation,"loan_amnt: 35000
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 35000
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+48,test,100104020,2017,title: Debt consolidation,"loan_amnt: 6400
+purpose: debt_consolidation
+emp_length: 10+ years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 6400
+purpose: debt_consolidation
+emp_length: 10+ years
+
+Borrower text:
+title: Debt consolidation
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
+49,test,139102238,2018,title: Home improvement,"loan_amnt: 2000
+purpose: home_improvement
+emp_length: 2 years","You are evaluating the risk that a consumer loan will default.
+
+Use the borrower-provided text and optional structured loan context below.
+Estimate the probability of default as a number between 0 and 1.
+Then briefly explain the reasoning using only the provided information.
+
+Structured context:
+loan_amnt: 2000
+purpose: home_improvement
+emp_length: 2 years
+
+Borrower text:
+title: Home improvement
+
+Respond in JSON with keys:
+- default_probability
+- rationale",0,0
