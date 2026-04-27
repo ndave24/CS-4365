@@ -1,4 +1,0 @@
-top_k,overlap_count,jaccard_overlap,overlapping_features
-5,4,0.6666666666666666,"emp_length, fico_n, home_ownership_n, purpose"
-10,8,1.0,"dti_n, emp_length, experience_c, fico_n, home_ownership_n, loan_amnt, purpose, revenue"
-20,8,1.0,"dti_n, emp_length, experience_c, fico_n, home_ownership_n, loan_amnt, purpose, revenue"
